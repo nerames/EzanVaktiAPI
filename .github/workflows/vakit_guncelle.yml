@@ -18,15 +18,15 @@ jobs:
 
       - name: Gerekli Kütüphaneleri Yukle
         run: |
-          # uv aracını tamamen devre dışı bırakıp standart kütüphaneleri kuruyoruz
+          # uv ve versiyon takıntılarını tamamen devre dışı bıraktık
           pip install requests requests-cache beautifulsoup4
 
       - name: Dunya Vakitlerini Topla
         run: |
-          # Hatalı setup.sh scriptini atlayıp doğrudan veriyi çeken Python kodunu çalıştırıyoruz
-          # Bu sayede ne uv ne de 3.14 engeline takılıyoruz
-          export PYTHONPATH=$PYTHONPATH:.
-          python3 -m ezanvakti_api.main
+          # Python'a kaynak kodun 'src' klasöründe olduğunu öğretiyoruz
+          # Ve doğrudan ana fonksiyonu tetikliyoruz
+          export PYTHONPATH=$PYTHONPATH:$(pwd)/src
+          python3 src/ezanvakti_api/main.py
         env:
           OUTPUT_DIR: 'static'
 
