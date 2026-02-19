@@ -16,19 +16,19 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Gerekli Araclari Yukle
+      - name: Gerekli Kütüphaneleri Yukle
         run: |
-          # Hem uv aracını hem de temel kütüphaneleri kuruyoruz
-          pip install uv requests requests-cache beautifulsoup4
+          # uv aracını tamamen devre dışı bırakıp standart kütüphaneleri kuruyoruz
+          pip install requests requests-cache beautifulsoup4
 
       - name: Dunya Vakitlerini Topla
         run: |
-          # Script içindeki 'uv' kontrollerini baypas etmek için ortam değişkeni ekliyoruz
-          # Ve bash ile çalıştırarak kabuk hatasını önlüyoruz
-          PYTHONPATH=. bash scripts/setup.sh 
+          # Hatalı setup.sh scriptini atlayıp doğrudan veriyi çeken Python kodunu çalıştırıyoruz
+          # Bu sayede ne uv ne de 3.14 engeline takılıyoruz
+          export PYTHONPATH=$PYTHONPATH:.
+          python3 -m ezanvakti_api.main
         env:
-          UV_IGNORE_PYTHON: 1
-          UV_PYTHON: python3
+          OUTPUT_DIR: 'static'
 
       - name: R2 Deposuna Yukle
         uses: jakejarvis/s3-sync-action@master
