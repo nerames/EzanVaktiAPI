@@ -2,8 +2,8 @@ name: Aylık Vakit Güncelleyici
 
 on:
   schedule:
-    - cron: '0 0 25 * *' # Her ayın 25'inde gece uyanır
-  workflow_dispatch: # Manuel çalıştırman için buton açar
+    - cron: '0 0 25 * *'
+  workflow_dispatch:
 
 jobs:
   build-and-deploy:
@@ -27,19 +27,22 @@ jobs:
           rm -rf static
           mkdir -p static
           
-          # 2. Ana dosyayı bul ve çalıştır
+          # 2. Ana dosyayı bul
           MAIN_FILE=$(find . -name "main.py" | grep "ezanvakti_api" | head -n 1)
           echo "Çalıştırılacak dosya: $MAIN_FILE"
+          
+          # 3. Scripti çalıştırırken ÇIKTI klasörünü PYTHON'a açıkça tanıtıyoruz
+          # Bazı scriptler OUTPUT_DIR değişkenine bakar, garantiye alalım
+          export OUTPUT_DIR=static
           PYTHONPATH=. python3 $MAIN_FILE
           
-          # 3. Dosyalar nerede olursa olsun bul ve static klasörüne kopyala (Garanti Yöntem)
-          echo "Dosyalar taranıyor ve static klasörüne toplanıyor..."
-          find . -name "*.json" -not -path "./static/*" -exec cp {} static/ \; 2>/dev/null || true
-          find . -name "*.txt" -not -path "./static/*" -exec cp {} static/ \; 2>/dev/null || true
+          # 4. KRİTİK ADIM: Eğer script dosyaları static içine atmadıysa her yerden topla
+          echo "Dosyalar taranıyor ve toplanıyor..."
+          find . -name "*.json" ! -path "./static/*" ! -name "package.json" -exec cp -v {} static/ \; 2>/dev/null || true
           
-          # 4. Loglarda ne topladığımızı görelim
-          echo "Yüklenecek dosyalar şunlar:"
-          ls -R static/
+          # 5. Kaç dosya topladığımızı sayalım (8000+ olmalı)
+          echo "Yüklenecek toplam dosya sayısı:"
+          ls static | wc -l
         env:
           OUTPUT_DIR: 'static'
 
@@ -49,5 +52,5 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.GIZLI_ANAHTAR }}
           AWS_DEFAULT_REGION: auto
         run: |
-          # static/ içindeki dosyaları R2'nin en üstüne gönderir
-          aws s3 sync static/ s3://ezan-vakti-data/ --endpoint-url https://487099b8a3d3bb3d920865dd2ef05a3f.r2.cloudflarestorage.com --delete
+          # Boyut kontrolü yaparak sadece eksikleri tamamla
+          aws s3 sync static/ s3://ezan-vakti-data/ --endpoint-url https://487099b8a3d3bb3d920865dd2ef05a3f.r2.cloudflarestorage.com --delete --size-only
