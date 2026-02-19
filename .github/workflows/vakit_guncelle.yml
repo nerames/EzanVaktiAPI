@@ -41,4 +41,9 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.GIZLI_ANAHTAR }}
           AWS_DEFAULT_REGION: auto
         run: |
+          # Önce klasörde ne var görelim (Hata ayıklama için)
+          echo "Klasör içeriği kontrol ediliyor:"
+          ls -R static/ || echo "Klasör boş!"
+          
+          # Boş değilse yükle
           aws s3 sync static/ s3://ezan-vakti-data/ --endpoint-url https://487099b8a3d3bb3d920865dd2ef05a3f.r2.cloudflarestorage.com --delete
