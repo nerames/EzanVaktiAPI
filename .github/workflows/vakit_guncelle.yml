@@ -1,4 +1,5 @@
 name: Aylık Vakit Güncelleyici
+
 on:
   schedule:
     - cron: '0 0 25 * *' # Her ayın 25'inde gece uyanır
@@ -35,9 +36,9 @@ jobs:
           OUTPUT_DIR: 'static'
 
       - name: R2 Deposuna Yukle (AWS CLI ile)
-      env:
-        AWS_ACCESS_KEY_ID: ${{ secrets.ANAHTAR_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.GIZLI_ANAHTAR }}
-        AWS_DEFAULT_REGION: auto
-      run: |
-        aws s3 sync static/ s3://ezan-vakti-data/ --endpoint-url https://487099b8a3d3bb3d920865dd2ef05a3f.r2.cloudflarestorage.com --delete
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.ANAHTAR_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.GIZLI_ANAHTAR }}
+          AWS_DEFAULT_REGION: auto
+        run: |
+          aws s3 sync static/ s3://ezan-vakti-data/ --endpoint-url https://487099b8a3d3bb3d920865dd2ef05a3f.r2.cloudflarestorage.com --delete
