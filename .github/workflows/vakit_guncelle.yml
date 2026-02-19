@@ -23,8 +23,8 @@ jobs:
 
       - name: Dunya Vakitlerini Topla
         run: |
-          # Projeyi 'kurmadan' doğrudan scripti çalıştırıyoruz
-          PYTHONPATH=. sh scripts/setup.sh 
+          # 'sh' yerine daha yetenekli olan 'bash' kullanıyoruz
+          PYTHONPATH=. bash scripts/setup.sh
 
       - name: R2 Deposuna Yukle
         uses: jakejarvis/s3-sync-action@master
