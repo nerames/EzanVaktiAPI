@@ -22,13 +22,14 @@ jobs:
 
       - name: Dunya Vakitlerini Topla
         run: |
-          # Projenin içindeki ana dosyayı otomatik bulup çalıştırır
-          # Hatalı yollara (src/ vb.) takılmaz
-          MAIN_FILE=$(find . -name "main.py" | grep "ezanvakti_api" | head -n 1)
-          echo "Bulunan dosya: $MAIN_FILE"
+          # Verilerin kaydedileceği klasörü zorla oluşturuyoruz
+          mkdir -p static
           
-          # PYTHONPATH ayarını dosyanın olduğu yere göre dinamik yapar
+          # Dosyayı bul ve çalıştır
+          MAIN_FILE=$(find . -name "main.py" | grep "ezanvakti_api" | head -n 1)
           export PYTHONPATH=$PYTHONPATH:$(dirname $(dirname $MAIN_FILE))
+          
+          # Çıktı klasörünü açıkça belirtiyoruz
           python3 $MAIN_FILE
         env:
           OUTPUT_DIR: 'static'
