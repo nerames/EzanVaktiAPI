@@ -41,8 +41,8 @@ jobs:
         env:
           AWS_S3_BUCKET: ${{ secrets.R2_BUCKET_NAME }}
           # Yeni isimleri buraya bağladık
-          AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
-          # Senin verdiğin taze endpoint adresi
+          AWS_ACCESS_KEY_ID: ${{ secrets.ANAHTAR_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.GIZLI_ANAHTAR }}
+          # Senin verdiğin güncel endpoint adresi
           AWS_ENDPOINT: https://487099b8a3d3bb3d920865dd2ef05a3f.r2.cloudflarestorage.com
           SOURCE_DIR: 'static'
