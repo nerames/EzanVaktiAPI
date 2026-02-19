@@ -16,13 +16,15 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Araclari Yukle
+      - name: Bağımlılıkları Zorla Yükle
         run: |
-          pip install uv
-          uv pip install . --system
+          pip install requests requests-cache beautifulsoup4
+          # Versiyon kısıtlamasını görmezden gelerek projeyi kuruyoruz
+          pip install . --no-deps --ignore-requires-python
 
       - name: Dunya Vakitlerini Topla
         run: |
+          # Veri çekme scriptini çalıştırır
           sh scripts/setup.sh 
 
       - name: R2 Deposuna Yukle
