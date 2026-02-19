@@ -35,15 +35,19 @@ jobs:
         env:
           OUTPUT_DIR: 'static'
 
-      - name: R2 Deposuna Yukle (AWS CLI ile)
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.ANAHTAR_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.GIZLI_ANAHTAR }}
-          AWS_DEFAULT_REGION: auto
+      - name: Dunya Vakitlerini Topla
         run: |
-          # Önce klasörde ne var görelim (Hata ayıklama için)
-          echo "Klasör içeriği kontrol ediliyor:"
-          ls -R static/ || echo "Klasör boş!"
+          # Klasörü temizle ve yeniden oluştur
+          rm -rf static
+          mkdir -p static
           
-          # Boş değilse yükle
-          aws s3 sync static/ s3://ezan-vakti-data/ --endpoint-url https://487099b8a3d3bb3d920865dd2ef05a3f.r2.cloudflarestorage.com --delete
+          # Scripti çalıştırırken çıktı dizinini ortam değişkeni olarak ver
+          export OUTPUT_DIR=static
+          
+          # Dosyayı bul ve çalıştır
+          MAIN_FILE=$(find . -name "main.py" | grep "ezanvakti_api" | head -n 1)
+          PYTHONPATH=. python3 $MAIN_FILE
+          
+          # Eğer script dosyaları ana dizine attıysa onları static'e taşı (Garanti olsun)
+          find . -maxdepth 1 -name "*.json" -exec mv {} static/ \; 2>/dev/null || true
+          find . -maxdepth 1 -name "*.txt" -exec mv {} static/ \; 2>/dev/null || true
