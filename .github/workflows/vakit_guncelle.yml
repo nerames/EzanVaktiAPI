@@ -18,15 +18,18 @@ jobs:
 
       - name: Gerekli Kütüphaneleri Yukle
         run: |
-          # uv ve versiyon takıntılarını tamamen devre dışı bıraktık
           pip install requests requests-cache beautifulsoup4
 
       - name: Dunya Vakitlerini Topla
         run: |
-          # Python'a kaynak kodun 'src' klasöründe olduğunu öğretiyoruz
-          # Ve doğrudan ana fonksiyonu tetikliyoruz
-          export PYTHONPATH=$PYTHONPATH:$(pwd)/src
-          python3 src/ezanvakti_api/main.py
+          # Projenin içindeki ana dosyayı otomatik bulup çalıştırır
+          # Hatalı yollara (src/ vb.) takılmaz
+          MAIN_FILE=$(find . -name "main.py" | grep "ezanvakti_api" | head -n 1)
+          echo "Bulunan dosya: $MAIN_FILE"
+          
+          # PYTHONPATH ayarını dosyanın olduğu yere göre dinamik yapar
+          export PYTHONPATH=$PYTHONPATH:$(dirname $(dirname $MAIN_FILE))
+          python3 $MAIN_FILE
         env:
           OUTPUT_DIR: 'static'
 
