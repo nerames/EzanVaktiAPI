@@ -16,15 +16,19 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Sadece Gerekli Kütüphaneleri Yukle
+      - name: Gerekli Araclari Yukle
         run: |
-          # Projenin ayar dosyalarına bakmadan sadece bize lazım olanları kuruyoruz
-          pip install requests requests-cache beautifulsoup4
+          # Hem uv aracını hem de temel kütüphaneleri kuruyoruz
+          pip install uv requests requests-cache beautifulsoup4
 
       - name: Dunya Vakitlerini Topla
         run: |
-          # 'sh' yerine daha yetenekli olan 'bash' kullanıyoruz
-          PYTHONPATH=. bash scripts/setup.sh
+          # Script içindeki 'uv' kontrollerini baypas etmek için ortam değişkeni ekliyoruz
+          # Ve bash ile çalıştırarak kabuk hatasını önlüyoruz
+          PYTHONPATH=. bash scripts/setup.sh 
+        env:
+          UV_IGNORE_PYTHON: 1
+          UV_PYTHON: python3
 
       - name: R2 Deposuna Yukle
         uses: jakejarvis/s3-sync-action@master
