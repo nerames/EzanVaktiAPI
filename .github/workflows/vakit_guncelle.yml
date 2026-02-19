@@ -16,16 +16,15 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Bağımlılıkları Zorla Yükle
+      - name: Sadece Gerekli Kütüphaneleri Yukle
         run: |
+          # Projenin ayar dosyalarına bakmadan sadece bize lazım olanları kuruyoruz
           pip install requests requests-cache beautifulsoup4
-          # Versiyon kısıtlamasını görmezden gelerek projeyi kuruyoruz
-          pip install . --no-deps --ignore-requires-python
 
       - name: Dunya Vakitlerini Topla
         run: |
-          # Veri çekme scriptini çalıştırır
-          sh scripts/setup.sh 
+          # Projeyi 'kurmadan' doğrudan scripti çalıştırıyoruz
+          PYTHONPATH=. sh scripts/setup.sh 
 
       - name: R2 Deposuna Yukle
         uses: jakejarvis/s3-sync-action@master
