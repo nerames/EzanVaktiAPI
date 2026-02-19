@@ -42,5 +42,5 @@ jobs:
           AWS_S3_BUCKET: ${{ secrets.R2_BUCKET_NAME }}
           AWS_ACCESS_KEY_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          AWS_ENDPOINT: https://${{ secrets.CLOUDFLARE_ACCOUNT_ID }}.r2.cloudflarestorage.com
+          AWS_ENDPOINT: https://487099b8a3d3bb3d920865dd2ef05a3f.r2.cloudflarestorage.com
           SOURCE_DIR: 'static'
